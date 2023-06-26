@@ -23,8 +23,8 @@ public:
 		}
 	}
 
-	Texture getTexture(std::string name) {
-		return *m_textures[name];
+	Texture* getTexture(std::string name) {
+		return m_textures[name];
 	}
 
 	void unloadTextures() {

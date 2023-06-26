@@ -1,12 +1,20 @@
 #include "./engine/entity.hpp"
 #include "./engine/physics.hpp"
 
-class Shape : public Entity {
+class Player : public Entity {
     using Entity::Entity;
 public:
     void draw() {
-        Rectangle rec = { m_position.x, m_position.y, 120, 60 };
-        DrawRectanglePro(rec, { 60, 30 }, m_angle, RED);
+        Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
+        Rectangle destRec = { m_position.x, m_position.y, m_width, m_height};
+        DrawTexturePro(
+            *m_texture, 
+            sourceRec, 
+            destRec, 
+            { (float)m_texture->width / 2, (float)m_texture->height / 2 }, 
+            (float)m_angle, 
+            WHITE
+        );
     }
 };
 
