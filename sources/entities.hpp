@@ -16,6 +16,18 @@ public:
             WHITE
         );
     }
+    void moveUp() {
+        m_position.y -= Settings::playerStepWidth;
+    }
+    void moveLeft() {
+        m_position.x -= Settings::playerStepWidth;
+    }
+    void moveDown() {
+        m_position.y += Settings::playerStepWidth;
+    }
+    void moveRight() {
+        m_position.x += Settings::playerStepWidth;
+    }
 };
 
 class Block : public PhysicsEntity {

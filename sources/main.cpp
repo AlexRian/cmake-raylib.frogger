@@ -21,6 +21,11 @@ int main(void)
 
     while (!WindowShouldClose())
     {
+        if (IsKeyPressed(KEY_W)) player.moveUp();
+        if (IsKeyPressed(KEY_A)) player.moveLeft();
+        if (IsKeyPressed(KEY_S)) player.moveDown();
+        if (IsKeyPressed(KEY_D)) player.moveRight();
+
         BeginDrawing();
             ClearBackground(RAYWHITE);
 
