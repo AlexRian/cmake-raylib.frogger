@@ -6,7 +6,7 @@
 #include "./engine/assetsManager.hpp"
 
 std::vector<TextureData> textureData{
-    {"player", ASSETS_PATH"player.png"}
+    {"player", ASSETS_PATH"entities/player.png"}
 };
 
 int main(void)
