@@ -6,7 +6,7 @@ class Player : public Entity {
 public:
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
-        Rectangle destRec = { m_position.x, m_position.y, m_width, m_height};
+        Rectangle destRec = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
         DrawTexturePro(
             *m_texture, 
             sourceRec, 

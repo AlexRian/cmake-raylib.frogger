@@ -9,6 +9,7 @@ protected:
 	float m_angle;
 	int m_width;
 	int m_height;
+	int m_scale;
 	Texture2D* m_texture;
 
 public:
@@ -18,8 +19,8 @@ public:
 		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle } {};
 	Entity(int positionX, int positionY, float angle, int width, int height)
 		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle }, m_width(width), m_height(height) {};
-	Entity(int positionX, int positionY, float angle, int width, int height, Texture2D* texture)
-		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle }, m_width(width), m_height(height), m_texture(texture) {};
+	Entity(int positionX, int positionY, float angle, int scale, Texture2D* texture)
+		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle }, m_scale(scale), m_texture(texture) {};
 	virtual void draw() {};
 	Vector2 getPosition() {
 		return m_position;

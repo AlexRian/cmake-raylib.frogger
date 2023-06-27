@@ -17,7 +17,7 @@ int main(void)
     Debug debug{ 0, 0, false };
     AssetsManager assetsManager{ textureData };
 
-    Player player { 100, 100, 0, 64, 64, assetsManager.getTexture("player")};
+    Player player { 100, 100, 0, 1, assetsManager.getTexture("player")};
 
     while (!WindowShouldClose())
     {
