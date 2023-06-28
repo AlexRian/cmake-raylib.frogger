@@ -6,7 +6,8 @@
 #include "./engine/assetsManager.hpp"
 
 std::vector<TextureData> textureData{
-    {"player", ASSETS_PATH"entities/player.png"}
+    {"player", ASSETS_PATH"entities/player.png"},
+    {"car", ASSETS_PATH"entities/car.png"}
 };
 
 int main(void)
@@ -17,7 +18,9 @@ int main(void)
     Debug debug{ 0, 0, false };
     AssetsManager assetsManager{ textureData };
 
-    Player player { 100, 100, 0, 1, assetsManager.getTexture("player")};
+    Player player { Settings::screenWidth / 2, Settings::screenHeight - 100, 0, 1, assetsManager.getTexture("player")};
+
+    ObstacleLine obstacleLine{ 100, -1, assetsManager.getTexture("player") };
 
     while (!WindowShouldClose())
     {
@@ -28,6 +31,8 @@ int main(void)
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
+
+            obstacleLine.draw();
 
             player.draw();
 
