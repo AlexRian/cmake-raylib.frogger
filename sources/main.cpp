@@ -18,9 +18,15 @@ int main(void)
     Debug debug{ 0, 0, false };
     AssetsManager assetsManager{ textureData };
 
-    Player player { Settings::screenWidth / 2, Settings::screenHeight - 100, 0, 1, assetsManager.getTexture("player")};
+    Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player")};
 
-    ObstacleLine obstacleLine{ 100, -1, assetsManager.getTexture("player") };
+    ObstacleLine obstacleLine{ Settings::screenHeight - 75, -1, assetsManager.getTexture("player") };
+
+    Ground ground{ Settings::screenWidth / 2, Settings::screenHeight - 175, 180, Settings::screenWidth, 250 };
+    Water water{ Settings::screenWidth / 2, 225, 180, Settings::screenWidth, 250 };
+    Grass topGrass{ Settings::screenWidth / 2, 375, 180, Settings::screenWidth, 50 };
+    Grass bottomGrass{ Settings::screenWidth / 2, Settings::screenHeight - 25, 180, Settings::screenWidth, 50 };
+    Grass safeZone{ Settings::screenWidth / 2, 75, 180, Settings::screenWidth, 50 };
 
     while (!WindowShouldClose())
     {
@@ -32,8 +38,14 @@ int main(void)
         BeginDrawing();
             ClearBackground(RAYWHITE);
 
-            obstacleLine.draw();
+            water.draw();
+            ground.draw();
+            
+            bottomGrass.draw();
+            topGrass.draw();
+            safeZone.draw();
 
+            obstacleLine.draw();
             player.draw();
 
             debug.draw();

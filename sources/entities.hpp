@@ -82,11 +82,29 @@ private:
     int m_direction;
 };
 
-class Ground : public PhysicsEntity {
-    using PhysicsEntity::PhysicsEntity;
+class Ground : public Entity {
+    using Entity::Entity;
 public:
     void draw() {
-        Rectangle rec = { m_position.x, m_position.y, Settings::screenWidth, 60 };
-        DrawRectanglePro(rec, { Settings::screenWidth / 2, 30 }, getBodyAngle(), BLACK);
+        Rectangle rec = { m_position.x, m_position.y, Settings::screenWidth, m_height };
+        DrawRectanglePro(rec, { Settings::screenWidth / 2, (float)m_height / 2 }, m_angle, BLACK);
+    }
+};
+
+class Grass : public Entity {
+    using Entity::Entity;
+public:
+    void draw() {
+        Rectangle rec = { m_position.x, m_position.y, Settings::screenWidth, m_height };
+        DrawRectanglePro(rec, { Settings::screenWidth / 2, (float)m_height / 2 }, m_angle, GREEN);
+    }
+};
+
+class Water : public Entity {
+    using Entity::Entity;
+public:
+    void draw() {
+        Rectangle rec = { m_position.x, m_position.y, Settings::screenWidth, m_height };
+        DrawRectanglePro(rec, { Settings::screenWidth / 2, (float)m_height / 2 }, m_angle, BLUE);
     }
 };
