@@ -3,6 +3,7 @@
 #include "./engine/debug.hpp"
 #include "./engine/physics.hpp"
 #include "./entities.hpp"
+#include "./gamelogic.hpp"
 #include "./engine/assetsManager.hpp"
 
 std::vector<TextureData> textureData{
@@ -20,13 +21,13 @@ int main(void)
 
     Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player")};
 
-    ObstacleLine obstacleLine{ Settings::screenHeight - 75, -1, assetsManager.getTexture("car") };
-
     Ground ground{ Settings::screenWidth / 2, Settings::screenHeight - 175, 180, Settings::screenWidth, 250 };
     Water water{ Settings::screenWidth / 2, 225, 180, Settings::screenWidth, 250 };
     Grass topGrass{ Settings::screenWidth / 2, 375, 180, Settings::screenWidth, 50 };
     Grass bottomGrass{ Settings::screenWidth / 2, Settings::screenHeight - 25, 180, Settings::screenWidth, 50 };
     Grass safeZone{ Settings::screenWidth / 2, 75, 180, Settings::screenWidth, 50 };
+
+    Gamelogic gamelogic{ &assetsManager };
 
     while (!WindowShouldClose())
     {
@@ -45,7 +46,7 @@ int main(void)
             topGrass.draw();
             safeZone.draw();
 
-            obstacleLine.draw();
+            gamelogic.drawObstacleLines();
             player.draw();
 
             debug.draw();

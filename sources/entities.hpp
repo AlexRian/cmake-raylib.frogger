@@ -1,3 +1,4 @@
+#pragma once
 #include "./engine/entity.hpp"
 #include "./engine/physics.hpp"
 
