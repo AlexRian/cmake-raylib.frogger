@@ -20,7 +20,7 @@ int main(void)
 
     Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player")};
 
-    ObstacleLine obstacleLine{ Settings::screenHeight - 75, -1, assetsManager.getTexture("player") };
+    ObstacleLine obstacleLine{ Settings::screenHeight - 75, -1, assetsManager.getTexture("car") };
 
     Ground ground{ Settings::screenWidth / 2, Settings::screenHeight - 175, 180, Settings::screenWidth, 250 };
     Water water{ Settings::screenWidth / 2, 225, 180, Settings::screenWidth, 250 };
