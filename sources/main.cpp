@@ -8,7 +8,8 @@
 
 std::vector<TextureData> textureData{
     {"player", ASSETS_PATH"entities/player.png"},
-    {"car", ASSETS_PATH"entities/car.png"}
+    {"car", ASSETS_PATH"entities/car.png"},
+    {"log", ASSETS_PATH"entities/log.png"}
 };
 
 int main(void)
@@ -47,6 +48,8 @@ int main(void)
             safeZone.draw();
 
             gamelogic.drawObstacleLines();
+            gamelogic.drawRaftLines();
+            
             player.draw();
 
             debug.draw();
