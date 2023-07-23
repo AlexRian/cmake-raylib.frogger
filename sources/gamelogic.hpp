@@ -11,7 +11,7 @@ public:
 		generateRaftLines(assetsManager);
 	}
 	void generateObstacleLines(AssetsManager* assetsManager) {
-		for (size_t i = 1; i < 6; i++)
+		for (size_t i = 1; i < 2; i++)
 		{
 			m_obstacleLines.push_back(
 				new ObstacleLine{ 
@@ -37,16 +37,35 @@ public:
 	void drawObstacleLines() {
 		for each (ObstacleLine* obstacleLine in m_obstacleLines)
 		{
+			if (m_gameActive) {
+				obstacleLine->makeMove();
+			}
 			obstacleLine->draw();
 		}
 	}
 	void drawRaftLines() {
 		for each (RaftLine* raftLine in m_raftLines)
 		{
+			if (m_gameActive) {
+				raftLine->makeMove();
+			}
 			raftLine->draw();
+		}
+	}
+	void checkCollisionsWithObstacles(Player player) {
+		for each (ObstacleLine* obstacleLine in m_obstacleLines)
+		{
+			for each (Obstacle obstacle in obstacleLine->getObstacles())
+			{
+				bool collision = CheckCollisionRecs(player.getBody(), obstacle.getBody());
+				if (collision) {
+					m_gameActive = false;
+				}
+			}
 		}
 	}
 private:
 	std::vector<ObstacleLine*> m_obstacleLines;
 	std::vector<RaftLine*> m_raftLines;
+	bool m_gameActive = true;
 };

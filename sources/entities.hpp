@@ -7,11 +7,11 @@ class Player : public Entity {
 public:
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
-        Rectangle destRec = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
+        m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
         DrawTexturePro(
             *m_texture, 
             sourceRec, 
-            destRec, 
+            m_body,
             { (float)m_texture->width / 2, (float)m_texture->height / 2 }, 
             (float)m_angle, 
             WHITE
@@ -29,6 +29,11 @@ public:
     void moveRight() {
         m_position.x += Settings::playerStepWidth;
     }
+    Rectangle getBody() {
+        return m_body;
+    }
+private:
+    Rectangle m_body;
 };
 
 class Obstacle : public Entity {
@@ -36,11 +41,11 @@ class Obstacle : public Entity {
 public:
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
-        Rectangle destRec = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
+        m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
         DrawTexturePro(
             *m_texture,
             sourceRec,
-            destRec,
+            m_body,
             { (float)m_texture->width / 2, (float)m_texture->height / 2 },
             (float)m_angle,
             WHITE
@@ -58,6 +63,11 @@ public:
         }
         m_position.x += 1;
     }
+    Rectangle getBody() {
+        return m_body;
+    }
+private:
+    Rectangle m_body;
 };
 
 class Raft : public Entity {
@@ -100,9 +110,13 @@ public:
             m_obstacles.push_back(obstacle);
         }
     };
-    void draw() {
+    void makeMove() {
         for (Raft& obstacle : m_obstacles) {
             m_direction > 0 ? obstacle.moveRight() : obstacle.moveLeft();
+        }
+    }
+    void draw() {
+        for (Raft& obstacle : m_obstacles) {
             obstacle.draw();
         }
     }
@@ -123,11 +137,18 @@ public:
             m_obstacles.push_back(obstacle);
         }
     };
-    void draw() {
+    void makeMove() {
         for (Obstacle& obstacle : m_obstacles) {
             m_direction > 0 ? obstacle.moveRight() : obstacle.moveLeft();
+        }
+    }
+    void draw() {
+        for (Obstacle& obstacle : m_obstacles) {
             obstacle.draw();
         }
+    }
+    std::vector<Obstacle> getObstacles() {
+        return m_obstacles;
     }
 private:
     std::vector<Obstacle> m_obstacles;

@@ -49,6 +49,7 @@ int main(void)
 
             gamelogic.drawObstacleLines();
             gamelogic.drawRaftLines();
+            gamelogic.checkCollisionsWithObstacles(player);
             
             player.draw();
 
