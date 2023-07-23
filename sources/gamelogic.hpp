@@ -11,7 +11,7 @@ public:
 		generateRaftLines(assetsManager);
 	}
 	void generateObstacleLines(AssetsManager* assetsManager) {
-		for (size_t i = 1; i < 2; i++)
+		for (size_t i = 1; i < 6; i++)
 		{
 			m_obstacleLines.push_back(
 				new ObstacleLine{ 
@@ -60,6 +60,18 @@ public:
 				bool collision = CheckCollisionRecs(player.getBody(), obstacle.getBody());
 				if (collision) {
 					m_gameActive = false;
+				}
+			}
+		}
+	}
+	void checkCollisionsWithRafts(Player& player) {
+		for each (RaftLine* raftLine in m_raftLines)
+		{
+			for each (Raft raft in raftLine->getRafts())
+			{
+				bool collision = CheckCollisionRecs(player.getBody(), raft.getBody());
+				if (collision) {
+					raftLine->getDirection() == 1 ? player.moveRight(1) : player.moveLeft(1);
 				}
 			}
 		}

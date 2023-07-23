@@ -33,9 +33,12 @@ int main(void)
     while (!WindowShouldClose())
     {
         if (IsKeyPressed(KEY_W)) player.moveUp();
-        if (IsKeyPressed(KEY_A)) player.moveLeft();
         if (IsKeyPressed(KEY_S)) player.moveDown();
-        if (IsKeyPressed(KEY_D)) player.moveRight();
+        if (IsKeyPressed(KEY_A)) player.moveLeft(Settings::playerStepWidth);
+        if (IsKeyPressed(KEY_D)) player.moveRight(Settings::playerStepWidth);
+
+        gamelogic.checkCollisionsWithObstacles(player);
+        gamelogic.checkCollisionsWithRafts(player);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -49,7 +52,6 @@ int main(void)
 
             gamelogic.drawObstacleLines();
             gamelogic.drawRaftLines();
-            gamelogic.checkCollisionsWithObstacles(player);
             
             player.draw();
 
