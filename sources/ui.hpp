@@ -12,7 +12,7 @@ public:
 		DrawText(TextFormat("Score: %06i", score), (Settings::screenWidth / 2) - 100, 10, 20, DARKGRAY);
 
 		DrawText("Time:", 10, 10, 20, DARKGRAY);
-		DrawRectangle(60, 10, 200, 20, GREEN);
+		DrawRectangle(60, 10, time, 20, GREEN);
 
 		DrawText("Lives:", Settings::screenWidth - 230, 10, 20, DARKGRAY);
 

@@ -39,8 +39,8 @@ int main(void)
         if (IsKeyPressed(KEY_A)) player.moveLeft(Settings::playerStepWidth);
         if (IsKeyPressed(KEY_D)) player.moveRight(Settings::playerStepWidth);
 
-        gamelogic.checkCollisionsWithObstacles(player);
-        gamelogic.checkCollisionsWithRafts(player);
+        gamelogic.checkCollisionsWithObstacles(&player);
+        gamelogic.checkCollisionsWithRafts(&player);
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
