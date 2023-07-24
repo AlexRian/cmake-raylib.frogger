@@ -2,9 +2,10 @@
 #include "raylib.h"
 #include "./engine/debug.hpp"
 #include "./engine/physics.hpp"
+#include "./engine/assetsManager.hpp"
 #include "./entities.hpp"
 #include "./gamelogic.hpp"
-#include "./engine/assetsManager.hpp"
+#include "./ui.hpp"
 
 std::vector<TextureData> textureData{
     {"player", ASSETS_PATH"entities/player.png"},
@@ -29,6 +30,7 @@ int main(void)
     Grass safeZone{ Settings::screenWidth / 2, 75, 180, Settings::screenWidth, 50 };
 
     Gamelogic gamelogic{ &assetsManager };
+    UI ui{ &assetsManager };
 
     while (!WindowShouldClose())
     {
@@ -55,6 +57,7 @@ int main(void)
             
             player.draw();
 
+            ui.draw(gamelogic.getScore(), gamelogic.getLives(), gamelogic.getTime());
             debug.draw();
         EndDrawing();
     }

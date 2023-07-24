@@ -76,8 +76,20 @@ public:
 			}
 		}
 	}
+	int getLives() {
+		return m_lives;
+	}
+	int getScore() {
+		return m_score;
+	}
+	int getTime() {
+		return m_time;
+	}
 private:
 	std::vector<ObstacleLine*> m_obstacleLines;
 	std::vector<RaftLine*> m_raftLines;
+	int m_lives = 5;
+	int m_score = 100;
+	int m_time = 100;
 	bool m_gameActive = true;
 };
