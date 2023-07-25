@@ -71,6 +71,8 @@ int main(void)
         EndDrawing();
     }
 
+    soundManager.closeAudioDevice();
+
     CloseWindow();
 
     return 0;

@@ -34,4 +34,8 @@ public:
 			delete sound.second;
 		}
 	}
+
+	void closeAudioDevice() {
+		CloseAudioDevice();
+	}
 };
