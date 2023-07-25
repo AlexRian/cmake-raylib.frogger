@@ -24,6 +24,11 @@ public:
 		}
 	}
 
+	~SoundManager() {
+		unloadSounds();
+		CloseAudioDevice();
+	}
+
 	void playSound(std::string name) {
 		PlaySound(*m_sounds[name]);
 	}
@@ -33,9 +38,5 @@ public:
 			UnloadSound(*sound.second);
 			delete sound.second;
 		}
-	}
-
-	void closeAudioDevice() {
-		CloseAudioDevice();
 	}
 };
