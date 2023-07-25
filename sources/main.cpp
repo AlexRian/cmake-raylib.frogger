@@ -3,6 +3,7 @@
 #include "./engine/debug.hpp"
 #include "./engine/physics.hpp"
 #include "./engine/assetsManager.hpp"
+#include "./engine/sound.hpp"
 #include "./entities.hpp"
 #include "./gamelogic.hpp"
 #include "./ui.hpp"
@@ -14,6 +15,10 @@ std::vector<TextureData> textureData{
     {"death", ASSETS_PATH"death.png" }
 };
 
+std::vector<SoundData> soundData{
+    {"death", ASSETS_PATH"sounds/beep.wav"},
+};
+
 int main(void)
 {
     InitWindow(Settings::screenWidth, Settings::screenHeight, "Frogger");
@@ -21,6 +26,7 @@ int main(void)
 
     Debug debug{ 0, 0, false };
     AssetsManager assetsManager{ textureData };
+    SoundManager soundManager{ soundData };
 
     Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player"), assetsManager.getTexture("death") };
 
@@ -35,8 +41,8 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        gamelogic.checkCollisionsWithObstacles(&player);
-        gamelogic.checkCollisionsWithRafts(&player);
+        gamelogic.checkCollisionsWithObstacles(&player, &soundManager);
+        gamelogic.checkCollisionsWithRafts(&player, &soundManager);
 
         if (gamelogic.isGameActive()) {
             if (IsKeyPressed(KEY_W)) player.moveUp();

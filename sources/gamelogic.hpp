@@ -4,6 +4,7 @@
 #include <thread>
 #include "raylib.h"
 #include "./engine/assetsManager.hpp"
+#include "./engine/sound.hpp"
 #include "./entities.hpp"
 
 class Gamelogic {
@@ -56,7 +57,7 @@ public:
 			raftLine->draw();
 		}
 	}
-	void checkCollisionsWithObstacles(Player* player) {
+	void checkCollisionsWithObstacles(Player* player, SoundManager* soundManager) {
 		if (!m_gameActive) return;
 		for (ObstacleLine* obstacleLine : m_obstacleLines)
 		{
@@ -64,6 +65,7 @@ public:
 			{
 				bool collision = CheckCollisionRecs(player->getBody(), obstacle->getBody());
 				if (collision) {
+					soundManager->playSound("death");
 					--m_lives;
 					m_gameActive = false;
 					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player );
@@ -71,7 +73,7 @@ public:
 			}
 		}
 	}
-	void checkCollisionsWithRafts(Player* player) {
+	void checkCollisionsWithRafts(Player* player, SoundManager* soundManager) {
 		if (!m_gameActive) return;
 		bool collision = false;
 		for (RaftLine* raftLine : m_raftLines)
@@ -87,6 +89,7 @@ public:
 			}
 		}
 		if (player->getPosition().y < 350 && m_gameActive && !collision) {
+			soundManager->playSound("death");
 			--m_lives;
 			m_gameActive = false;
 			std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
