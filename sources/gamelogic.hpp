@@ -58,35 +58,47 @@ public:
 	}
 	void checkCollisionsWithObstacles(Player* player) {
 		if (!m_gameActive) return;
-		for each (ObstacleLine* obstacleLine in m_obstacleLines)
+		for (ObstacleLine* obstacleLine : m_obstacleLines)
 		{
-			for each (Obstacle obstacle in obstacleLine->getObstacles())
+			for (Obstacle* obstacle : obstacleLine->getObstacles())
 			{
-				bool collision = CheckCollisionRecs(player->getBody(), obstacle.getBody());
+				bool collision = CheckCollisionRecs(player->getBody(), obstacle->getBody());
 				if (collision) {
+					--m_lives;
 					m_gameActive = false;
-					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player );
 				}
 			}
 		}
 	}
 	void checkCollisionsWithRafts(Player* player) {
 		if (!m_gameActive) return;
-		for each (RaftLine* raftLine in m_raftLines)
+		bool collision = false;
+		for (RaftLine* raftLine : m_raftLines)
 		{
-			for each (Raft raft in raftLine->getRafts())
+			for (Raft* raft : raftLine->getRafts())
 			{
-				bool collision = CheckCollisionRecs(player->getBody(), raft.getBody());
-				if (collision) {
+				bool possibleCollision = CheckCollisionRecs(player->getBody(), raft->getBody());
+				if (possibleCollision) {
+					collision = true;
 					raftLine->getDirection() == 1 ? player->moveRight(1) : player->moveLeft(1);
+					break;
 				}
 			}
 		}
+		if (player->getPosition().y < 350 && m_gameActive && !collision) {
+			--m_lives;
+			m_gameActive = false;
+			std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+		}
 	}
 	void makeActive(Player* player) {
-		--m_lives;
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		player->showDeathIcon();
+		std::this_thread::sleep_for(std::chrono::milliseconds(900));
+		player->hideDeathIcon();
 		player->setPosition({ Settings::screenWidth / 2, Settings::screenHeight - 25 });
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		m_time = 200;
 		m_gameActive = true;
 	}
 	void timerProcess() {
@@ -105,8 +117,12 @@ public:
 	int getTime() {
 		return m_time;
 	}
+	bool isGameActive() {
+		return m_gameActive;
+	}
 private:
 	std::vector<ObstacleLine*> m_obstacleLines;
+	std::vector<Obstacle*> m_obstacles;
 	std::vector<RaftLine*> m_raftLines;
 	int m_lives = 5;
 	int m_score = 100;

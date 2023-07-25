@@ -10,7 +10,8 @@
 std::vector<TextureData> textureData{
     {"player", ASSETS_PATH"entities/player.png"},
     {"car", ASSETS_PATH"entities/car.png"},
-    {"log", ASSETS_PATH"entities/log.png"}
+    {"log", ASSETS_PATH"entities/log.png"},
+    {"death", ASSETS_PATH"death.png" }
 };
 
 int main(void)
@@ -21,7 +22,7 @@ int main(void)
     Debug debug{ 0, 0, false };
     AssetsManager assetsManager{ textureData };
 
-    Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player")};
+    Player player { Settings::screenWidth / 2, Settings::screenHeight - 25, 0, 1, assetsManager.getTexture("player"), assetsManager.getTexture("death") };
 
     Ground ground{ Settings::screenWidth / 2, Settings::screenHeight - 175, 180, Settings::screenWidth, 250 };
     Water water{ Settings::screenWidth / 2, 225, 180, Settings::screenWidth, 250 };
@@ -34,13 +35,15 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        if (IsKeyPressed(KEY_W)) player.moveUp();
-        if (IsKeyPressed(KEY_S)) player.moveDown();
-        if (IsKeyPressed(KEY_A)) player.moveLeft(Settings::playerStepWidth);
-        if (IsKeyPressed(KEY_D)) player.moveRight(Settings::playerStepWidth);
-
         gamelogic.checkCollisionsWithObstacles(&player);
         gamelogic.checkCollisionsWithRafts(&player);
+
+        if (gamelogic.isGameActive()) {
+            if (IsKeyPressed(KEY_W)) player.moveUp();
+            if (IsKeyPressed(KEY_S)) player.moveDown();
+            if (IsKeyPressed(KEY_A)) player.moveLeft(Settings::playerStepWidth);
+            if (IsKeyPressed(KEY_D)) player.moveRight(Settings::playerStepWidth);
+        }
 
         BeginDrawing();
             ClearBackground(RAYWHITE);

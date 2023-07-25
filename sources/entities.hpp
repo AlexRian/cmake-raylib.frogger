@@ -5,6 +5,8 @@
 class Player : public Entity {
     using Entity::Entity;
 public:
+    Player(int positionX, int positionY, float angle, int scale, Texture2D* texture, Texture2D* deathTexture)
+        : Entity(positionX, positionY, angle, scale, texture), m_mainTexture{ texture }, m_deathTexture{ deathTexture } {};
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
         m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
@@ -29,11 +31,19 @@ public:
     void moveRight(int stepWidth) {
         m_position.x += stepWidth;
     }
+    void showDeathIcon() {
+        m_texture = m_deathTexture;
+    }
+    void hideDeathIcon() {
+        m_texture = m_mainTexture;
+    }
     Rectangle getBody() {
         return m_body;
     }
 private:
     Rectangle m_body;
+    Texture2D* m_mainTexture;
+    Texture2D* m_deathTexture;
 };
 
 class Obstacle : public Entity {
@@ -75,12 +85,12 @@ class Raft : public Entity {
 public:
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
-        m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
+        m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale - 50, (float)m_texture->height * m_scale };
         DrawTexturePro(
             *m_texture,
             sourceRec,
             m_body,
-            { (float)m_texture->width / 2, (float)m_texture->height / 2 },
+            { (float)m_texture->width / 2 - 100, (float)m_texture->height / 2 },
             (float)m_angle,
             WHITE
         );
@@ -111,28 +121,28 @@ public:
     {
         for (int i = 1; i < 5; i++)
         {
-            Raft obstacle{ (Settings::screenWidth / 4) * i, m_positionY, 0, 1, texture };
+            Raft* obstacle = new Raft((Settings::screenWidth / 2) * i, m_positionY, 0, 1, texture);
             m_rafts.push_back(obstacle);
         }
     };
     void makeMove() {
-        for (Raft& obstacle : m_rafts) {
-            m_direction > 0 ? obstacle.moveRight() : obstacle.moveLeft();
+        for (Raft* obstacle : m_rafts) {
+            m_direction > 0 ? obstacle->moveRight() : obstacle->moveLeft();
         }
     }
     void draw() {
-        for (Raft& obstacle : m_rafts) {
-            obstacle.draw();
+        for (Raft* obstacle : m_rafts) {
+            obstacle->draw();
         }
     }
     int getDirection() {
         return m_direction;
     }
-    std::vector<Raft> getRafts() {
+    std::vector<Raft*> getRafts() {
         return m_rafts;
     }
 private:
-    std::vector<Raft> m_rafts;
+    std::vector<Raft*> m_rafts;
     int m_positionY;
     int m_direction;
 };
@@ -144,25 +154,26 @@ public:
     {
         for (int i = 1; i < 5; i++)
         {
-            Obstacle obstacle{ (Settings::screenWidth / 4) * i, m_positionY, 0, 1, texture };
+
+            Obstacle* obstacle = new Obstacle{ (Settings::screenWidth / 4) * i, m_positionY, 0, 1, texture };
             m_obstacles.push_back(obstacle);
         }
     };
     void makeMove() {
-        for (Obstacle& obstacle : m_obstacles) {
-            m_direction > 0 ? obstacle.moveRight() : obstacle.moveLeft();
+        for (Obstacle* obstacle : m_obstacles) {
+            m_direction > 0 ? obstacle->moveRight() : obstacle->moveLeft();
         }
     }
     void draw() {
-        for (Obstacle& obstacle : m_obstacles) {
-            obstacle.draw();
+        for (Obstacle* obstacle : m_obstacles) {
+            obstacle->draw();
         }
     }
-    std::vector<Obstacle> getObstacles() {
+    std::vector<Obstacle*> getObstacles() {
         return m_obstacles;
     }
 private:
-    std::vector<Obstacle> m_obstacles;
+    std::vector<Obstacle*> m_obstacles;
     int m_positionY;
     int m_direction;
 };
