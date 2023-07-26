@@ -12,6 +12,7 @@ public:
 	Gamelogic(AssetsManager* assetsManager) {
 		generateObstacleLines(assetsManager);
 		generateRaftLines(assetsManager);
+		generateSafeZones(assetsManager);
 
 		std::thread* thread_object = new std::thread(&Gamelogic::timerProcess, this);
 	}
@@ -39,6 +40,20 @@ public:
 			);
 		}
 	}
+	void generateSafeZones(AssetsManager* assetsManager) {
+		for (size_t i = 1; i < 6; i++)
+		{
+			m_safeZones.push_back(
+				new SafeZone{
+					200 * (int)i,
+					50,
+					0,
+					1,
+					assetsManager->getTexture("player")
+				}
+			);
+		}
+	}
 	void drawObstacleLines() {
 		for each (ObstacleLine* obstacleLine in m_obstacleLines)
 		{
@@ -55,6 +70,12 @@ public:
 				raftLine->makeMove();
 			}
 			raftLine->draw();
+		}
+	}
+	void drawSafeZones() {
+		for each (SafeZone* safezone in m_safeZones)
+		{
+			safezone->draw();
 		}
 	}
 	void checkCollisionsWithObstacles(Player* player, SoundManager* soundManager) {
@@ -127,6 +148,7 @@ private:
 	std::vector<ObstacleLine*> m_obstacleLines;
 	std::vector<Obstacle*> m_obstacles;
 	std::vector<RaftLine*> m_raftLines;
+	std::vector<SafeZone*> m_safeZones;
 	int m_lives = 5;
 	int m_score = 100;
 	int m_time = 200;

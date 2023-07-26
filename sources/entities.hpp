@@ -46,6 +46,35 @@ private:
     Texture2D* m_deathTexture;
 };
 
+class SafeZone : public Entity {
+    using Entity::Entity;
+public:
+    SafeZone(int positionX, int positionY, float angle, int scale, Texture2D* texture)
+        : Entity(positionX, positionY, angle, scale, texture), m_playerTexture{ texture } {};
+    void draw() {
+        DrawRectangle(m_position.x, m_position.y, 50, 50, BLUE);
+        Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height};
+        m_body = { m_position.x, m_position.y, 100, 100 };
+        if (m_occupied) {
+            DrawTexturePro(
+                *m_texture,
+                sourceRec,
+                { m_position.x, m_position.y, (float)m_texture->width, (float)m_texture->height },
+                { 0, 0 },
+                (float)m_angle,
+                WHITE
+            );
+        }
+    }
+    Rectangle getBody() {
+        return m_body;
+    }
+private:
+    Rectangle m_body;
+    Texture2D* m_playerTexture;
+    bool m_occupied = false;
+};
+
 class Obstacle : public Entity {
     using Entity::Entity;
 public:

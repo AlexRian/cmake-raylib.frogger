@@ -63,6 +63,7 @@ int main(void)
 
             gamelogic.drawObstacleLines();
             gamelogic.drawRaftLines();
+            gamelogic.drawSafeZones();
             
             player.draw();
 
