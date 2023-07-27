@@ -9,14 +9,15 @@
 #include "./ui.hpp"
 
 std::vector<TextureData> textureData{
-    {"player", ASSETS_PATH"entities/player.png"},
-    {"car", ASSETS_PATH"entities/car.png"},
-    {"log", ASSETS_PATH"entities/log.png"},
-    {"death", ASSETS_PATH"death.png" }
+    { "player", ASSETS_PATH"entities/player.png" },
+    { "car", ASSETS_PATH"entities/car.png" },
+    { "log", ASSETS_PATH"entities/log.png" },
+    { "death", ASSETS_PATH"death.png" }
 };
 
 std::vector<SoundData> soundData{
-    {"death", ASSETS_PATH"sounds/beep.wav"},
+    { "death", ASSETS_PATH"sounds/beep.wav" },
+    { "win", ASSETS_PATH"sounds/win.wav" },
 };
 
 int main(void)
@@ -43,6 +44,7 @@ int main(void)
     {
         gamelogic.checkCollisionsWithObstacles(&player, &soundManager);
         gamelogic.checkCollisionsWithRafts(&player, &soundManager);
+        gamelogic.checkCollisionsWithSafeZones(&player, &soundManager);
 
         if (gamelogic.isGameActive()) {
             if (IsKeyPressed(KEY_W)) player.moveUp();

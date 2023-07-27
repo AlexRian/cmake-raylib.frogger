@@ -89,7 +89,31 @@ public:
 					soundManager->playSound("death");
 					--m_lives;
 					m_gameActive = false;
+					player->showDeathIcon();
 					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player );
+				}
+			}
+		}
+	}
+	void checkCollisionsWithSafeZones(Player* player, SoundManager* soundManager) {
+		if (!m_gameActive) return;
+		for (SafeZone* safezone : m_safeZones)
+		{
+			bool collision = CheckCollisionRecs(player->getBody(), safezone->getBody());
+			if (collision) {
+				m_gameActive = false;
+				if (!safezone->isOccupied()) {
+					soundManager->playSound("win");
+					player->hidePlayer();
+					safezone->makeOccupied();
+					m_score += 100;
+					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+				}
+				else {
+					soundManager->playSound("death");
+					--m_lives;
+					player->showDeathIcon();
+					std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
 				}
 			}
 		}
@@ -109,17 +133,18 @@ public:
 				}
 			}
 		}
-		if (player->getPosition().y < 350 && m_gameActive && !collision) {
+		if (player->getPosition().y < 350 && player->getPosition().y > 100 && m_gameActive && !collision) {
 			soundManager->playSound("death");
 			--m_lives;
 			m_gameActive = false;
+			player->showDeathIcon();
 			std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
 		}
 	}
 	void makeActive(Player* player) {
-		player->showDeathIcon();
 		std::this_thread::sleep_for(std::chrono::milliseconds(900));
 		player->hideDeathIcon();
+		player->showPlayer();
 		player->setPosition({ Settings::screenWidth / 2, Settings::screenHeight - 25 });
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		m_time = 200;
@@ -150,7 +175,7 @@ private:
 	std::vector<RaftLine*> m_raftLines;
 	std::vector<SafeZone*> m_safeZones;
 	int m_lives = 5;
-	int m_score = 100;
+	int m_score = 0;
 	int m_time = 200;
 	bool m_gameActive = true;
 };

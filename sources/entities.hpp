@@ -10,14 +10,16 @@ public:
     void draw() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height };
         m_body = { m_position.x, m_position.y, (float)m_texture->width * m_scale, (float)m_texture->height * m_scale };
-        DrawTexturePro(
-            *m_texture, 
-            sourceRec, 
-            m_body,
-            { (float)m_texture->width / 2, (float)m_texture->height / 2 }, 
-            (float)m_angle, 
-            WHITE
-        );
+        if (!m_hidden) {
+            DrawTexturePro(
+                *m_texture,
+                sourceRec,
+                m_body,
+                { (float)m_texture->width / 2, (float)m_texture->height / 2 },
+                (float)m_angle,
+                WHITE
+            );
+        }
     }
     void moveUp() {
         m_position.y -= Settings::playerStepWidth;
@@ -37,6 +39,12 @@ public:
     void hideDeathIcon() {
         m_texture = m_mainTexture;
     }
+    void hidePlayer() {
+        m_hidden = true;
+    }
+    void showPlayer() {
+        m_hidden = false;
+    }
     Rectangle getBody() {
         return m_body;
     }
@@ -44,6 +52,7 @@ private:
     Rectangle m_body;
     Texture2D* m_mainTexture;
     Texture2D* m_deathTexture;
+    bool m_hidden = false;
 };
 
 class SafeZone : public Entity {
@@ -54,7 +63,7 @@ public:
     void draw() {
         DrawRectangle(m_position.x, m_position.y, 50, 50, BLUE);
         Rectangle sourceRec = { 0.0f, 0.0f, (float)m_texture->width, (float)m_texture->height};
-        m_body = { m_position.x, m_position.y, 100, 100 };
+        m_body = { m_position.x, m_position.y, 50, 50 };
         if (m_occupied) {
             DrawTexturePro(
                 *m_texture,
@@ -68,6 +77,12 @@ public:
     }
     Rectangle getBody() {
         return m_body;
+    }
+    void makeOccupied() {
+        m_occupied = true;
+    }
+    bool isOccupied() {
+        return m_occupied;
     }
 private:
     Rectangle m_body;
