@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "raylib.h"
-#include "./engine/debug.hpp"
-#include "./engine/physics.hpp"
-#include "./engine/assetsManager.hpp"
-#include "./engine/sound.hpp"
-#include "./entities.hpp"
-#include "./gamelogic.hpp"
-#include "./ui.hpp"
+#include "./engine/headers/debug.hpp"
+#include "./engine/headers/physics.hpp"
+#include "./engine/headers/assetsManager.hpp"
+#include "./engine/headers/sound.hpp"
+#include "./headers/entities.hpp"
+#include "./headers/gamelogic.hpp"
+#include "./headers/ui.hpp"
 
 std::vector<TextureData> textureData{
     { "player", ASSETS_PATH"entities/player.png" },
@@ -35,7 +35,7 @@ int main(void)
     Water water{ Settings::screenWidth / 2, 225, 180, Settings::screenWidth, 250 };
     Grass topGrass{ Settings::screenWidth / 2, 375, 180, Settings::screenWidth, 50 };
     Grass bottomGrass{ Settings::screenWidth / 2, Settings::screenHeight - 25, 180, Settings::screenWidth, 50 };
-    Grass safeZone{ Settings::screenWidth / 2, 75, 180, Settings::screenWidth, 50 };
+    Grass shore{ Settings::screenWidth / 2, 75, 180, Settings::screenWidth, 50 };
 
     Gamelogic gamelogic{ &assetsManager };
     UI ui{ &assetsManager };
@@ -61,7 +61,7 @@ int main(void)
             
             bottomGrass.draw();
             topGrass.draw();
-            safeZone.draw();
+            shore.draw();
 
             gamelogic.drawObstacleLines();
             gamelogic.drawRaftLines();

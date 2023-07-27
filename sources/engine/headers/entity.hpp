@@ -21,18 +21,12 @@ public:
 		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle }, m_width(width), m_height(height) {};
 	Entity(int positionX, int positionY, float angle, int scale, Texture2D* texture)
 		:m_position{ Vector2{ (float)positionX, (float)positionY } }, m_angle{ angle }, m_scale(scale), m_texture(texture) {};
+	
 	virtual void draw() {};
-	Vector2 getPosition() {
-		return m_position;
-	};
-	void setPosition(Vector2 position) {
-		m_position = position;
-	};
-	void setSize(Vector2 size) {
-		m_width = size.x;
-		m_height = size.y;
-	}
-	Vector2 getSize() {
-		return Vector2{ (float)m_width, (float)m_height };
-	}
+	
+	Vector2 getPosition();
+	Vector2 getSize();
+
+	void setPosition(Vector2 position);
+	void setSize(Vector2 size);
 };
