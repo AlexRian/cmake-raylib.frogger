@@ -45,6 +45,7 @@ int main(void)
         gamelogic.checkCollisionsWithObstacles(&player, &soundManager);
         gamelogic.checkCollisionsWithRafts(&player, &soundManager);
         gamelogic.checkCollisionsWithSafeZones(&player, &soundManager);
+        gamelogic.checkTimer(&player, &soundManager);
 
         if (gamelogic.isGameActive()) {
             if (IsKeyPressed(KEY_W)) player.moveUp();
@@ -69,7 +70,7 @@ int main(void)
             
             player.draw();
 
-            ui.draw(gamelogic.getScore(), gamelogic.getLives(), gamelogic.getTime());
+            ui.draw(gamelogic.getScore(), gamelogic.getLives(), gamelogic.getTime(), gamelogic.getGameState());
             debug.draw();
         EndDrawing();
     }

@@ -5,7 +5,7 @@ Gamelogic::Gamelogic(AssetsManager* assetsManager) {
 	generateRaftLines(assetsManager);
 	generateSafeZones(assetsManager);
 
-	std::thread* thread_object = new std::thread(&Gamelogic::timerProcess, this);
+	m_timerThread = new std::thread(&Gamelogic::timerProcess, this);
 }
 void Gamelogic::drawObstacleLines() {
 	for each (ObstacleLine * obstacleLine in m_obstacleLines)
@@ -40,35 +40,52 @@ void Gamelogic::checkCollisionsWithObstacles(Player* player, SoundManager* sound
 			bool collision = CheckCollisionRecs(player->getBody(), obstacle->getBody());
 			if (collision) {
 				soundManager->playSound("death");
-				--m_lives;
+				decreaseLives();
 				m_gameActive = false;
 				player->showDeathIcon();
-				std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+
+				m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, false);
 			}
 		}
 	}
 }
 void Gamelogic::checkCollisionsWithSafeZones(Player* player, SoundManager* soundManager) {
 	if (!m_gameActive) return;
+	bool collision = false;
 	for (SafeZone* safezone : m_safeZones)
 	{
-		bool collision = CheckCollisionRecs(player->getBody(), safezone->getBody());
-		if (collision) {
+		bool possibleCollision = CheckCollisionRecs(player->getBody(), safezone->getBody());
+		if (possibleCollision) {
+			collision = true;
 			m_gameActive = false;
 			if (!safezone->isOccupied()) {
 				soundManager->playSound("win");
 				player->hidePlayer();
 				safezone->makeOccupied();
 				m_score += 100;
-				std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+				m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, false);
 			}
 			else {
 				soundManager->playSound("death");
-				--m_lives;
+				decreaseLives();
 				player->showDeathIcon();
-				std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+				m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, false);
 			}
 		}
+	}
+	if (player->getPosition().y < 100 && m_gameActive && !collision) {
+		soundManager->playSound("death");
+		decreaseLives();
+		m_gameActive = false;
+		player->showDeathIcon();
+		m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, false);
+	}
+}
+void Gamelogic::decreaseLives() {
+	--m_lives;
+	if (m_lives == 0) {
+		m_gameOver = true;
+		m_gameState = GameState::GameOver;
 	}
 }
 void Gamelogic::checkCollisionsWithRafts(Player* player, SoundManager* soundManager) {
@@ -88,20 +105,35 @@ void Gamelogic::checkCollisionsWithRafts(Player* player, SoundManager* soundMana
 	}
 	if (player->getPosition().y < 350 && player->getPosition().y > 100 && m_gameActive && !collision) {
 		soundManager->playSound("death");
-		--m_lives;
+		decreaseLives();
 		m_gameActive = false;
 		player->showDeathIcon();
-		std::thread* thread_object = new std::thread(&Gamelogic::makeActive, this, player);
+		m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, false);
 	}
 }
-void Gamelogic::makeActive(Player* player) {
+void Gamelogic::checkTimer(Player* player, SoundManager* soundManager) {
+	if (m_time == 0 && m_gameActive) {
+		soundManager->playSound("death");
+		decreaseLives();
+		m_gameActive = false;
+		player->showDeathIcon();
+		m_activeThread = new std::thread(&Gamelogic::makeActive, this, player, true);
+	};
+}
+void Gamelogic::makeActive(Player* player, bool timeEnded) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(900));
-	player->hideDeathIcon();
-	player->showPlayer();
-	player->setPosition({ Settings::screenWidth / 2, Settings::screenHeight - 25 });
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	m_time = 200;
-	m_gameActive = true;
+	if (!m_gameOver) {
+		player->hideDeathIcon();
+		player->showPlayer();
+		player->setPosition({ Settings::screenWidth / 2, Settings::screenHeight - 25 });
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		m_time = 200;
+		m_gameActive = true;
+		
+		if (timeEnded) {
+			m_timerThread = new std::thread(&Gamelogic::timerProcess, this);
+		}
+	}
 }
 void Gamelogic::timerProcess() {
 	while (m_time > 0)
@@ -122,7 +154,9 @@ int Gamelogic::getTime() {
 bool Gamelogic::isGameActive() {
 	return m_gameActive;
 }
-
+GameState Gamelogic::getGameState() {
+	return m_gameState;
+}
 void Gamelogic::generateObstacleLines(AssetsManager* assetsManager) {
 	for (size_t i = 1; i < 6; i++)
 	{

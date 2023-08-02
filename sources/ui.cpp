@@ -1,9 +1,10 @@
 #include "headers/ui.hpp"
+#include "headers/gamelogic.hpp"
 
 UI::UI(AssetsManager* assetsManager) {
 	m_healtTexture = assetsManager->getTexture("player");
 }
-void UI::draw(int score, int lives, int time) {
+void UI::draw(int score, int lives, int time, GameState gameState) {
 	DrawText(TextFormat("Score: %06i", score), (Settings::screenWidth / 2) - 100, 10, 20, DARKGRAY);
 
 	DrawText("Time:", 10, 10, 20, DARKGRAY);
@@ -23,5 +24,11 @@ void UI::draw(int score, int lives, int time) {
 			(float)0,
 			WHITE
 		);
+	}
+
+	if (gameState == GameState::GameOver) {
+		DrawRectangle(Settings::screenWidth / 2 - 150, Settings::screenHeight / 2 - 150, 300, 300, WHITE);
+		DrawText("Game", Settings::screenWidth / 2 - 50, Settings::screenHeight / 2 - 40, 40, BLACK);
+		DrawText("Over", Settings::screenWidth / 2 - 50, Settings::screenHeight / 2, 40, BLACK);
 	}
 }
