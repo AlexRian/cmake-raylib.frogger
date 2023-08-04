@@ -83,6 +83,7 @@ void Obstacle::draw() {
     );
 }
 void Obstacle::moveLeft(int speed) {
+    m_angle = 180;
     m_position.x -= speed;
     if (m_position.x < 0) {
         m_position = Vector2{ Settings::screenWidth, m_position.y };
