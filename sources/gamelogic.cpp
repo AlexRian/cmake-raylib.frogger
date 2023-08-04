@@ -88,6 +88,18 @@ void Gamelogic::decreaseLives() {
 		m_gameState = GameState::GameOver;
 	}
 }
+void Gamelogic::addScore()
+{
+	m_score += 100;
+}
+void Gamelogic::setPositionBuffer(int value) 
+{
+	m_playerPositionYBuffer = value;
+}
+int Gamelogic::getPositionBuffer()
+{
+	return m_playerPositionYBuffer;
+}
 void Gamelogic::checkCollisionsWithRafts(Player* player, SoundManager* soundManager) {
 	if (!m_gameActive) return;
 	bool collision = false;
@@ -98,7 +110,7 @@ void Gamelogic::checkCollisionsWithRafts(Player* player, SoundManager* soundMana
 			bool possibleCollision = CheckCollisionRecs(player->getBody(), raft->getBody());
 			if (possibleCollision) {
 				collision = true;
-				raftLine->getDirection() == 1 ? player->moveRight(1) : player->moveLeft(1);
+				raftLine->getDirection() == 1 ? player->moveRight(raftLine->getSpeed()) : player->moveLeft(raftLine->getSpeed());
 				break;
 			}
 		}
@@ -129,6 +141,7 @@ void Gamelogic::makeActive(Player* player, bool timeEnded) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		m_time = 200;
 		m_gameActive = true;
+		setPositionBuffer(player->getPosition().y);
 		
 		if (timeEnded) {
 			m_timerThread = new std::thread(&Gamelogic::timerProcess, this);
@@ -164,7 +177,8 @@ void Gamelogic::generateObstacleLines(AssetsManager* assetsManager) {
 			new ObstacleLine{
 				Settings::screenHeight - (50 * (int)i) - 25,
 				GetRandomValue(0, 1) == 0 ? 1 : -1,
-				assetsManager->getTexture("car")
+				assetsManager->getTexture("car"),
+				GetRandomValue(1, 3),
 			}
 		);
 	}
@@ -176,7 +190,8 @@ void Gamelogic::generateRaftLines(AssetsManager* assetsManager) {
 			new RaftLine{
 				(50 * (int)i) + 75,
 				GetRandomValue(0, 1) == 0 ? 1 : -1,
-				assetsManager->getTexture("log")
+				assetsManager->getTexture("log"),
+				GetRandomValue(1, 3),
 			}
 		);
 	}

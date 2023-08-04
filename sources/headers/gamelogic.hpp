@@ -29,6 +29,9 @@ public:
 	void makeActive(Player* player, bool timeEnded);
 	void timerProcess();
 	void decreaseLives();
+	void addScore();
+	void setPositionBuffer(int value);
+	int getPositionBuffer();
 	int getLives();
 	int getScore();
 	int getTime();
@@ -42,6 +45,7 @@ private:
 	int m_lives = 5;
 	int m_score = 0;
 	int m_time = 200;
+	int m_playerPositionYBuffer;
 	bool m_gameActive = true;
 	bool m_gameOver = false;
 	GameState m_gameState = GameState::Started;

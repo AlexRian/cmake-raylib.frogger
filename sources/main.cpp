@@ -40,6 +40,7 @@ int main(void)
     Gamelogic gamelogic{ &assetsManager };
     UI ui{ &assetsManager };
 
+    gamelogic.setPositionBuffer(player.getPosition().y);
     while (!WindowShouldClose())
     {
         gamelogic.checkCollisionsWithObstacles(&player, &soundManager);
@@ -48,7 +49,13 @@ int main(void)
         gamelogic.checkTimer(&player, &soundManager);
 
         if (gamelogic.isGameActive()) {
-            if (IsKeyPressed(KEY_W)) player.moveUp();
+            if (IsKeyPressed(KEY_W)) {
+                player.moveUp();
+                if (gamelogic.getPositionBuffer() > player.getPosition().y) {
+                    gamelogic.setPositionBuffer(player.getPosition().y);
+                    gamelogic.addScore();
+                }
+            };
             if (IsKeyPressed(KEY_S)) player.moveDown();
             if (IsKeyPressed(KEY_A)) player.moveLeft(Settings::playerStepWidth);
             if (IsKeyPressed(KEY_D)) player.moveRight(Settings::playerStepWidth);

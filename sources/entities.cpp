@@ -82,17 +82,17 @@ void Obstacle::draw() {
         WHITE
     );
 }
-void Obstacle::moveLeft() {
-    m_position.x -= 1;
+void Obstacle::moveLeft(int speed) {
+    m_position.x -= speed;
     if (m_position.x < 0) {
         m_position = Vector2{ Settings::screenWidth, m_position.y };
     }
 }
-void Obstacle::moveRight() {
+void Obstacle::moveRight(int speed) {
     if (m_position.x > Settings::screenWidth) {
         m_position = Vector2{ 0, m_position.y };
     }
-    m_position.x += 1;
+    m_position.x += speed;
 }
 Rectangle Obstacle::getBody() {
     return m_body;
@@ -111,25 +111,25 @@ void Raft::draw() {
         WHITE
     );
 }
-void Raft::moveLeft() {
-    m_position.x -= 1;
+void Raft::moveLeft(int speed) {
+    m_position.x -= speed;
     if (m_position.x < 0) {
         m_position = Vector2{ Settings::screenWidth, m_position.y };
     }
 }
-void Raft::moveRight() {
+void Raft::moveRight(int speed) {
     if (m_position.x > Settings::screenWidth) {
         m_position = Vector2{ 0, m_position.y };
     }
-    m_position.x += 1;
+    m_position.x += speed;
 }
 Rectangle Raft::getBody() {
     return m_body;
 }
 
 //RaftLine
-RaftLine::RaftLine(int positionY, int direction, Texture2D* texture)
-    : m_positionY(positionY), m_direction(direction)
+RaftLine::RaftLine(int positionY, int direction, Texture2D* texture, int speed)
+    : m_positionY(positionY), m_direction(direction), m_speed(speed)
 {
     for (int i = 1; i < 5; i++)
     {
@@ -137,10 +137,9 @@ RaftLine::RaftLine(int positionY, int direction, Texture2D* texture)
         m_rafts.push_back(obstacle);
     }
 };
-
 void RaftLine::makeMove() {
     for (Raft* obstacle : m_rafts) {
-        m_direction > 0 ? obstacle->moveRight() : obstacle->moveLeft();
+        m_direction > 0 ? obstacle->moveRight(m_speed) : obstacle->moveLeft(m_speed);
     }
 }
 void RaftLine::draw() {
@@ -151,13 +150,16 @@ void RaftLine::draw() {
 int RaftLine::getDirection() {
     return m_direction;
 }
+int RaftLine::getSpeed() {
+    return m_speed;
+}
 std::vector<Raft*> RaftLine::getRafts() {
     return m_rafts;
 }
 
 //ObstacleLine
-ObstacleLine::ObstacleLine(int positionY, int direction, Texture2D * texture)
-    : m_positionY(positionY), m_direction(direction)
+ObstacleLine::ObstacleLine(int positionY, int direction, Texture2D * texture, int speed)
+    : m_positionY(positionY), m_direction(direction), m_speed(speed)
 {
     for (int i = 1; i < 5; i++)
     {
@@ -168,7 +170,7 @@ ObstacleLine::ObstacleLine(int positionY, int direction, Texture2D * texture)
 };
 void ObstacleLine::makeMove() {
     for (Obstacle* obstacle : m_obstacles) {
-        m_direction > 0 ? obstacle->moveRight() : obstacle->moveLeft();
+        m_direction > 0 ? obstacle->moveRight(m_speed) : obstacle->moveLeft(m_speed);
     }
 }
 void ObstacleLine::draw() {

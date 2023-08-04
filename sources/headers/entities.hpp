@@ -44,8 +44,8 @@ class Obstacle : public Entity {
     using Entity::Entity;
 public:
     void draw();
-    void moveLeft();
-    void moveRight();
+    void moveLeft(int speed);
+    void moveRight(int speed);
     Rectangle getBody();
 private:
     Rectangle m_body;
@@ -55,8 +55,8 @@ class Raft : public Entity {
     using Entity::Entity;
 public:
     void draw();
-    void moveLeft();
-    void moveRight();
+    void moveLeft(int speed);
+    void moveRight(int speed);
     Rectangle getBody();
 private:
     Rectangle m_body;
@@ -64,21 +64,23 @@ private:
 
 class RaftLine {
 public:
-    RaftLine(int positionY, int direction, Texture2D* texture);
+    RaftLine(int positionY, int direction, Texture2D* texture, int speed);
 
     void makeMove();
     void draw();
     int getDirection();
     std::vector<Raft*> getRafts();
+    int getSpeed();
 private:
     std::vector<Raft*> m_rafts;
     int m_positionY;
     int m_direction;
+    int m_speed;
 };
 
 class ObstacleLine {
 public:
-    ObstacleLine(int positionY, int direction, Texture2D* texture);
+    ObstacleLine(int positionY, int direction, Texture2D* texture, int speed);
     
     void makeMove();
     void draw();
@@ -87,6 +89,7 @@ private:
     std::vector<Obstacle*> m_obstacles;
     int m_positionY;
     int m_direction;
+    int m_speed;
 };
 
 class Ground : public Entity {
